@@ -4,7 +4,10 @@
 
 Future home of dulkirmod for modern versions of minecraft.
 
-## Beta 1.0 is available now! See the release panel on the right side for compiled source
+## Non Canon Beta 2.0.0 for 1.20.2
+
+[Download available here](https://github.com/romangraef/dulkirMod-Fabric/releases)
+
 
 DulkirMod 1.8.9 Can be found [here](https://github.com/inglettronald/DulkirMod).
 
