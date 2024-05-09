@@ -41,10 +41,10 @@ object WorldRenderUtils {
 
     private fun line(matrix: MatrixStack.Entry, buffer: BufferBuilder, from: Vector3f, to: Vector3f) {
         val normal = to.sub(from, Vector3f()).mul(-1F)
-        buffer.vertex(matrix.positionMatrix, from.x, from.y, from.z)
-            .normal(matrix.normalMatrix, normal.x, normal.y, normal.z).next()
-        buffer.vertex(matrix.positionMatrix, to.x, to.y, to.z)
-            .normal(matrix.normalMatrix, normal.x, normal.y, normal.z)
+        buffer.vertex(matrix, from.x, from.y, from.z)
+            .normal(matrix, normal.x, normal.y, normal.z).next()
+        buffer.vertex(matrix, to.x, to.y, to.z)
+            .normal(matrix, normal.x, normal.y, normal.z)
             .next()
     }
 
@@ -60,7 +60,7 @@ object WorldRenderUtils {
         thickness: Float,
         depthTest: Boolean = true
     ) {
-        val matrices = context.matrixStack()
+        val matrices = context.assertHasMatrixStack() ?: return
         matrices.push()
         val prevShader = RenderSystem.getShader()
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram)
@@ -114,12 +114,17 @@ object WorldRenderUtils {
         matrices.pop()
     }
 
+    fun WorldRenderContext.assertHasMatrixStack(): MatrixStack? {
+		assert(matrixStack() != null)
+	    return matrixStack()
+    }
+
     /**
      * This draw line function is intended to be used for drawing very few lines, as it's not the most efficient.
      * For drawing many lines in a series, save them to an array and use the drawLineArray function.
      */
     fun drawLine(context: WorldRenderContext, startPos: Vec3d, endPos: Vec3d, color: Color, thickness: Float, depthTest: Boolean = true) {
-        val matrices = context.matrixStack()
+        val matrices = context.assertHasMatrixStack() ?: return
         matrices.push()
         val prevShader = RenderSystem.getShader()
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram)
@@ -162,7 +167,7 @@ object WorldRenderUtils {
      * drawLine function being called many times in series.
      */
     fun drawLineArray(context: WorldRenderContext, posArr: List<Vec3d>, color: Color, thickness: Float, depthTest: Boolean = true) {
-        val matrices = context.matrixStack()
+        val matrices = context.assertHasMatrixStack() ?: return
         matrices.push()
         val prevShader = RenderSystem.getShader()
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram)
@@ -217,6 +222,7 @@ object WorldRenderUtils {
         depthTest: Boolean = true,
         scale: Float = 1f
     ) {
+	    val matrices = context.assertHasMatrixStack() ?: return
         if (!depthTest) {
             RenderSystem.disableDepthTest()
         }
@@ -224,8 +230,7 @@ object WorldRenderUtils {
         RenderSystem.defaultBlendFunc()
         RenderSystem.disableCull()
 
-        val vertexConsumer = context.worldRenderer().bufferBuilders.entityVertexConsumers
-        val matrices = context.matrixStack()
+	    val vertexConsumer = context.worldRenderer().bufferBuilders.entityVertexConsumers
         matrices.push()
         matrices.translate(
             pos.x - context.camera().pos.x,
@@ -277,13 +282,13 @@ object WorldRenderUtils {
         pos: Vec3d,
     )
     {
+	    val matrices = context.assertHasMatrixStack() ?: return
         RenderSystem.disableDepthTest()
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         RenderSystem.disableCull()
         val d: Double = pos.distanceTo(MinecraftClient.getInstance().player?.pos)
         val distText = Text.literal(d.toInt().toString() + "m").setStyle(Style.EMPTY.withColor(Formatting.YELLOW))
-        val matrices = context.matrixStack()
         val vertexConsumer = context.worldRenderer().bufferBuilders.entityVertexConsumers
         matrices.push()
         val magnitude = sqrt((pos.x - context.camera().pos.x).pow(2) +
@@ -365,6 +370,7 @@ object WorldRenderUtils {
         color: Color,
         depthTest: Boolean
     ) {
+	    val matrices = context.assertHasMatrixStack() ?: return
         if (!depthTest) {
             RenderSystem.disableDepthTest()
             //RenderSystem.depthMask(false)
@@ -375,7 +381,6 @@ object WorldRenderUtils {
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
 
-        val matrices = context.matrixStack()
         val tes = Tessellator.getInstance()
         tes.buffer.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR)
         matrices.push()

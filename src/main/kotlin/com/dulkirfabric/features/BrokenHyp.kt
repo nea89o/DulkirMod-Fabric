@@ -6,6 +6,7 @@ import com.dulkirfabric.events.LongUpdateEvent
 import com.dulkirfabric.util.TablistUtils
 import com.dulkirfabric.util.render.HudRenderUtil
 import meteordevelopment.orbit.EventHandler
+import net.minecraft.component.DataComponentTypes
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Style
 import net.minecraft.text.Text
@@ -29,11 +30,11 @@ object BrokenHyp {
         val stack: ItemStack = mc.player?.mainHandStack ?: return
 
         // get info about held item
-        val tag = stack.nbt ?: return
-        id = tag.getCompound("ExtraAttributes")?.getString("id") ?: ""
+        val tag = stack.get(DataComponentTypes.CUSTOM_DATA)?.nbt ?: return
+        id = tag.getString("id") ?: ""
 
-        kill = tag.getCompound("ExtraAttributes")?.getInt("stats_book") ?: -1
-        championXp = tag.getCompound("ExtraAttributes")?.getDouble("champion_combat_xp") ?: -1.0
+        kill = tag.getInt("stats_book") ?: -1
+        championXp = tag.getDouble("champion_combat_xp") ?: -1.0
 
         // check if a wither blade, then check if same id
         if (!(id matches "(HYPERION|ASTRAEA|SCYLLA|VALKYRIE)".toRegex())) {

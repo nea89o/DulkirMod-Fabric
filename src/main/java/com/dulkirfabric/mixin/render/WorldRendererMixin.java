@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
 
-    @ModifyExpressionValue(method = "render(Lnet/minecraft/client/util/math/MatrixStack;FJZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lorg/joml/Matrix4f;)V",
+    @ModifyExpressionValue(method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getTeamColorValue()I"))
     public int getGlowColor(int existing, @Local Entity entity) {
         if (entity instanceof GlowingEntityInterface dEntity) {

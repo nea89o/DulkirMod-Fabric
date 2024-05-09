@@ -10,7 +10,9 @@ import com.dulkirfabric.util.render.WorldRenderUtils
 import meteordevelopment.orbit.EventHandler
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.InputUtil
+import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.Entity
+import net.minecraft.nbt.NbtString
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.BlockPos
@@ -29,14 +31,9 @@ object AotvHighlight {
 
     fun getHeldItemID(): String {
         val stack = mc.player?.mainHandStack ?: return ""
-        val tag = stack.nbt ?: return ""
-        val id = tag.getCompound("ExtraAttributes").get("id") ?: return ""
-        return id.toString().trim('"')
-    }
-
-    @EventHandler
-    fun onLong(event: LongUpdateEvent) {
-        //println(heldItemID)
+        val tag = stack.get(DataComponentTypes.CUSTOM_DATA)?.nbt ?: return ""
+        val id = tag.get("id") as? NbtString ?: return ""
+        return id.asString()
     }
 
     @EventHandler

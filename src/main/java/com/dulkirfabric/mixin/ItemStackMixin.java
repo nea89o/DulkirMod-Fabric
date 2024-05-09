@@ -1,7 +1,7 @@
 package com.dulkirfabric.mixin;
 
 import com.dulkirfabric.util.render.ItemChangeHandler;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public abstract class ItemStackMixin {
     @Shadow public abstract Item getItem();
 
     @Inject(method = "getTooltip", at = @At("HEAD"))
-    private void onGetTooltip(@Nullable PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
+    private void onGetTooltip(Item.TooltipContext context, @Nullable PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir) {
         ItemChangeHandler.INSTANCE.handle(this.getItem().getName().getString());
     }
 }

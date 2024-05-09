@@ -8,6 +8,7 @@ import com.dulkirfabric.util.TrackedCooldown
 import com.dulkirfabric.util.Utils
 import meteordevelopment.orbit.EventHandler
 import net.minecraft.client.sound.Sound
+import net.minecraft.component.DataComponentTypes
 import net.minecraft.item.ItemStack
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 import kotlin.math.round
@@ -89,8 +90,8 @@ object CooldownDisplays {
     }
 
     private fun fetchCooldownItem(stack: ItemStack): TrackedCooldown? {
-        val tag = stack.nbt ?: return null
-        val id = tag.getCompound("ExtraAttributes").get("id") ?: return null
+        val tag = stack.get(DataComponentTypes.CUSTOM_DATA)?.nbt ?: return null
+        val id = tag.get("id") ?: return null
         val idStr = id.toString().trim('"')
         trackedCooldowns.forEach {
             if (idStr matches it.value.itemID)

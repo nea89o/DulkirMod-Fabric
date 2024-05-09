@@ -19,16 +19,6 @@ public class MouseMixin {
         return (int) (originalScaledHeight / InventoryScale.INSTANCE.getScale());
     }
 
-    @ModifyExpressionValue(method = "onCursorPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;getScaledWidth()I"))
-    public int onCursorPosWidth(int originalScaledWidth) {
-        return (int) (originalScaledWidth / InventoryScale.INSTANCE.getScale());
-    }
-
-    @ModifyExpressionValue(method = "onCursorPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;getScaledHeight()I"))
-    public int onCursorPosHeight(int originalScaledHeight) {
-        return (int) (originalScaledHeight / InventoryScale.INSTANCE.getScale());
-    }
-
     @ModifyExpressionValue(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;getScaledWidth()I"))
     public int onMouseScrollWidth(int originalScaledWidth) {
         return (int) (originalScaledWidth / InventoryScale.INSTANCE.getScale());
